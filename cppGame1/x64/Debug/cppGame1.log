@@ -1,3 +1,15 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (cppGame1.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   main.cpp
+F:\cppGames\cppGame1\cppGame1\main.cpp(36,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(155,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(158,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(179,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(180,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(183,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(202,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(203,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(206,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(226,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(227,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(230,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   cppGame1.vcxproj -> F:\cppGames\cppGame1\x64\Debug\TimberGame.exe
