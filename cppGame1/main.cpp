@@ -10,7 +10,7 @@ int main()
 {
 	//window params
 	const int WIDTH		= 1920;
-	const int HIGHT		= 1080;
+	const int HEIGHT	= 1080;
 	//game options
 	bool bIsGamePaused = true;
 
@@ -37,9 +37,21 @@ int main()
 	
 	//initializing time
 	sf::Clock clock;
+	sf::RectangleShape timeBar;
+	float timeBarStartWidth = 400;
+	float timeBarHeight = 80;
+
+	timeBar.setSize(sf::Vector2f(timeBarStartWidth, timeBarHeight));
+	timeBar.setFillColor(sf::Color::Red);
+	timeBar.setPosition((WIDTH / 2) - (timeBarStartWidth / 2), HEIGHT - 100);
+
+	//Time tracking
+	sf::Time getTimeTotal;
+	float timeRemaining = 6.f;
+	float timeBarWidthPerSecond = timeBarStartWidth / timeRemaining;
 
 	//Window render
-	sf::VideoMode vm(WIDTH, HIGHT);
+	sf::VideoMode vm(WIDTH, HEIGHT);
 	sf::RenderWindow window(vm, "Timber!", sf::Style::Fullscreen);
 
 	
@@ -79,7 +91,7 @@ int main()
 		textRect.top +
 		textRect.height / 2.f
 	);
-	messageText.setPosition(WIDTH / 2.f, HIGHT / 2.f);
+	messageText.setPosition(WIDTH / 2.f, HEIGHT / 2.f);
 	scoreText.setPosition(50, 50);
 
 	//setting up tree
@@ -139,6 +151,7 @@ int main()
 		}
 		else
 		{
+			window.draw(timeBar);
 			window.draw(scoreText);
 		}
 		window.display();
@@ -146,9 +159,24 @@ int main()
 		if(!bIsGamePaused)
 		{
 			//measure time
-			sf::Time dt = clock.restart();
+			sf::Time dtime = clock.restart();
 
+			//subtract from the amount of time remaining
+			timeRemaining -= dtime.asSeconds();
+			//size the time bar
+			timeBar.setSize(sf::Vector2f(timeBarWidthPerSecond * timeRemaining, timeBarHeight));
 			
+			if (timeRemaining <= 0)
+			{
+				bIsGamePaused = true;
+
+				messageText.setString("Out of Time!");
+
+				sf::FloatRect textRect = messageText.getLocalBounds();
+				messageText.setOrigin(textRect.left + textRect.width / 2.f, textRect.top + textRect.height / 2.f);
+				messageText.setPosition(WIDTH / 2.f, HEIGHT / 2.f);
+			}
+
 			if (!bBeeActive)
 			{
 				//how fast is bee moving
@@ -164,7 +192,7 @@ int main()
 			else
 			{
 				spriteBee.setPosition(
-					spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()),
+					spriteBee.getPosition().x - (beeSpeed * dtime.asSeconds()),
 					spriteBee.getPosition().y
 				);
 				if (spriteBee.getPosition().x < -100)
@@ -187,7 +215,7 @@ int main()
 			else
 			{
 				spriteCloud1.setPosition(
-					spriteCloud1.getPosition().x + (cloudSpeed1 * dt.asSeconds()),
+					spriteCloud1.getPosition().x + (cloudSpeed1 * dtime.asSeconds()),
 					spriteCloud1.getPosition().y
 				);
 				//is cloud out of bounds
@@ -210,7 +238,7 @@ int main()
 			else
 			{
 				spriteCloud2.setPosition(
-					spriteCloud2.getPosition().x + (cloudSpeed2 * dt.asSeconds()),
+					spriteCloud2.getPosition().x + (cloudSpeed2 * dtime.asSeconds()),
 					spriteCloud2.getPosition().y
 				);
 				//is cloud out of bounds
@@ -234,7 +262,7 @@ int main()
 			else
 			{
 				spriteCloud3.setPosition(
-					spriteCloud3.getPosition().x + (cloudSpeed3 * dt.asSeconds()),
+					spriteCloud3.getPosition().x + (cloudSpeed3 * dtime.asSeconds()),
 					spriteCloud3.getPosition().y
 				);
 				//is cloud out of bounds
@@ -252,8 +280,8 @@ int main()
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
 		{
 			if (bIsGamePaused)bIsGamePaused = false;
-			//else bIsGamePaused = true;
-		}
+			playerScore = 0;
+			timeRemaining = 6.f;		}
 	}
 	return 0;
 }
