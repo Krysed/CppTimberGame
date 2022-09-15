@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <sstream>
 #include <string>
 #include <cstdlib>
@@ -8,6 +9,10 @@
 
 const int NUM_OF_BRANCHES = 6;
 
+/**
+ * @brief sets up on what side branches appear
+ * @param randomSeed - adds randomness to branch spawn
+*/
 void updateBranches(int randomSeed);
 
 enum class side { LEFT, RIGHT, NONE};
@@ -23,6 +28,11 @@ int main()
 	//window params
 	const int WIDTH		= 1920;
 	const int HEIGHT	= 1080;
+
+	//axe params
+	const float AXE_POSITION_LEFT = 700;
+	const float AXE_POSITION_RIGHT = 1075;
+
 	//game options
 	bool bIsGamePaused = true;
 
@@ -35,17 +45,41 @@ int main()
 	sf::Text messageText;
 	int playerScore		= 0;
 
+	float logSpeedX		= 1000.f;
+	float logSpeedY		= -1500.f;
 	float beeSpeed		= 0.0f;
 	float cloudSpeed1	= 0.0f;
 	float cloudSpeed2	= 0.0f;
 	float cloudSpeed3	= 0.0f;
 
+	bool bLogActive		= false;
 	bool bBeeActive		= false;
 	bool bCloud1Active	= false;
 	bool bCloud2Active	= false;
 	bool bCloud3Active	= false;
-
 	
+	//player input
+	bool bAcceptPlayerInput = false;
+
+	//chop sound
+	sf::SoundBuffer chopBuffer;
+	chopBuffer.loadFromFile("sound/chop.wav");
+	sf::Sound chop;
+	chop.setBuffer(chopBuffer);
+
+	//death sound
+	sf::SoundBuffer deathBuffer;
+	deathBuffer.loadFromFile("sound/death.wav");
+	sf::Sound death;
+	death.setBuffer(deathBuffer);
+
+	//out of time sound
+	sf::SoundBuffer outOfTimeBuffer;
+	outOfTimeBuffer.loadFromFile("sound/outOfTime.wav");
+	sf::Sound outOfTime;
+	outOfTime.setBuffer(outOfTimeBuffer);
+
+
 	//initializing time
 	sf::Clock clock;
 	sf::RectangleShape timeBar;
@@ -116,6 +150,29 @@ int main()
 		branches[i].setOrigin(220, 20);
 	}
 
+	//setting up Player
+	sf::Texture texturePlayer;
+	texturePlayer.loadFromFile("graphics/player.png");
+	sf::Sprite spritePlayer;
+	spritePlayer.setTexture(texturePlayer);
+	spritePlayer.setPosition(580, 720);
+	
+	side playerSide = side::LEFT;
+
+	//player axe setup
+	sf::Texture textureAxe;
+	textureAxe.loadFromFile("graphics/axe.png");
+	sf::Sprite spriteAxe;
+	spriteAxe.setTexture(textureAxe);
+	spriteAxe.setPosition(700, 830);
+
+	//death graphic
+	sf::Texture textureGravestone;
+	textureGravestone.loadFromFile("graphics/rip.png");
+	sf::Sprite spriteGravestone;
+	spriteGravestone.setTexture(textureGravestone);
+	spriteGravestone.setPosition(600, 860);
+
 	//setting up tree
 	sf::Texture textureTree;
 	textureTree.loadFromFile("graphics/tree.png");
@@ -123,6 +180,13 @@ int main()
 	sf::Sprite spriteTree;
 	spriteTree.setTexture(textureTree);
 	spriteTree.setPosition(810,0);
+
+	//setting up flying wooden log
+	sf::Texture textureLog;
+	textureLog.loadFromFile("graphics/log.png");
+	sf::Sprite spriteLog;
+	spriteLog.setTexture(textureLog);
+	spriteLog.setPosition(810, 720);
 
 	//setting up bee
 	sf::Texture textureBee;
@@ -146,30 +210,107 @@ int main()
 	spriteCloud2.setPosition(0, 250);
 	spriteCloud3.setPosition(0, 500);
 
-
-	updateBranches(1);
-	updateBranches(2);
-	updateBranches(3);
-	updateBranches(4);
-	updateBranches(3);
-
 	/**
 	 * @brief game loop 
 	*/
 	while (window.isOpen())
 	{
-		window.clear();
+		/**
+		 * @brief Player input
+		*/
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::KeyReleased && !bIsGamePaused)
+			{
+				//wait for player input
+				bAcceptPlayerInput = true;
 
-		//drawing sprites
-		window.draw(spriteBackground);
+				//hiding axe if not in use
+				spriteAxe.setPosition(2000,
+					spriteAxe.getPosition().y);
+			}
+		}
 
-		window.draw(spriteCloud1);
-		window.draw(spriteCloud2);
-		window.draw(spriteCloud3);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		{
+			window.close();
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+		{
+			if (bIsGamePaused)
+			{
+				bIsGamePaused = false;
+				playerScore = 0;
+				timeRemaining = 6.f;
 
-		window.draw(spriteTree);
-		window.draw(spriteBee);
-		
+				//making branches disappear
+				for (int i = 0; i < NUM_OF_BRANCHES; i++)
+				{
+					branchPositions[i] = side::NONE;
+				}
+				spriteGravestone.setPosition(675, 2000);
+				spritePlayer.setPosition(580, 720);
+
+				bAcceptPlayerInput = true;
+			}
+		}
+		if (bAcceptPlayerInput)
+		{
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			{
+				playerSide = side::RIGHT;
+				++playerScore;
+				timeRemaining += (2 / playerScore) + .15;
+
+				spriteAxe.setPosition(AXE_POSITION_RIGHT,
+					spriteAxe.getPosition().y);
+				spritePlayer.setPosition(1200, 720);
+				spritePlayer.setRotation(0);
+
+				//set log flying
+				spriteLog.setPosition(810, 720);
+				logSpeedX = -4000;
+				bLogActive = true;
+
+				//update branch
+				updateBranches(playerScore);
+				bAcceptPlayerInput = false;
+				
+				//sound
+				chop.setVolume(30);
+				chop.play();
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			{
+				//make sure player is on the left side
+				playerSide = side::LEFT;
+				++playerScore;
+
+				timeRemaining += (2 / playerScore) + .15;
+
+				spriteAxe.setPosition(AXE_POSITION_LEFT,
+					spriteAxe.getPosition().y);
+				spritePlayer.setPosition(580, 720);
+
+				//update branch
+				updateBranches(playerScore);
+
+				//set log flying
+				spriteLog.setPosition(810, 720);
+				logSpeedX = 4000;
+				bLogActive = true;
+				bAcceptPlayerInput = false;
+				
+				//sound
+				chop.setVolume(30);
+				chop.play();
+			}
+
+		}
+
 		std::stringstream ss;
 		ss << "Score : " << playerScore;
 		scoreText.setString(ss.str());
@@ -196,24 +337,6 @@ int main()
 				branches[i].setPosition(3000, height);
 			}
 		}
-
-		//drawing text
-		if (bIsGamePaused)
-		{
-			window.draw(messageText);
-		}
-		else
-		{
-			window.draw(timeBar);
-			window.draw(scoreText);
-
-		}
-		for (int i = 0; i < NUM_OF_BRANCHES; i++)
-		{
-			window.draw(branches[i]);
-		}
-		window.display();
-
 		if(!bIsGamePaused)
 		{
 			//measure time
@@ -224,6 +347,42 @@ int main()
 			//size the time bar
 			timeBar.setSize(sf::Vector2f(timeBarWidthPerSecond * timeRemaining, timeBarHeight));
 			
+			//handle flying log
+			if (bLogActive)
+			{
+				spriteLog.setPosition(spriteLog.getPosition().x + logSpeedX * dtime.asSeconds(),
+					spriteLog.getPosition().y + (logSpeedY * dtime.asSeconds()));
+				//is log in game border
+				if (spriteLog.getPosition().x < -100 || spriteLog.getPosition().x > 2000)
+				{
+					bLogActive = false;
+					spriteLog.setPosition(810, 720);
+				}
+			}
+
+			//is Player dead by branch?
+			if (branchPositions[5] == playerSide)
+			{
+				bIsGamePaused = true;
+				bAcceptPlayerInput = false;
+
+				//show gravestone and hide player sprite out of sight
+				spriteGravestone.setPosition(525, 760);
+				spritePlayer.setPosition(2000, 660);
+				spriteAxe.setPosition(2000, spriteAxe.getPosition().y);
+
+				messageText.setString("You are dead!");
+				
+				sf::FloatRect textRect = messageText.getLocalBounds();
+				messageText.setOrigin(textRect.left + textRect.width / 2.f,
+					textRect.top + textRect.height / 2.f);
+
+				messageText.setPosition(WIDTH / 2.f, HEIGHT / 2.f);
+				
+				death.setVolume(20);
+				death.play();
+			}
+
 			if (timeRemaining <= 0)
 			{
 				bIsGamePaused = true;
@@ -233,6 +392,9 @@ int main()
 				sf::FloatRect textRect = messageText.getLocalBounds();
 				messageText.setOrigin(textRect.left + textRect.width / 2.f, textRect.top + textRect.height / 2.f);
 				messageText.setPosition(WIDTH / 2.f, HEIGHT / 2.f);
+
+				outOfTime.setVolume(30);
+				outOfTime.play();
 			}
 
 			if (!bBeeActive)
@@ -320,7 +482,8 @@ int main()
 			else
 			{
 				spriteCloud3.setPosition(
-					spriteCloud3.getPosition().x + (cloudSpeed3 * dtime.asSeconds()),
+					spriteCloud3.getPosition().x + 
+					(cloudSpeed3 * dtime.asSeconds()),
 					spriteCloud3.getPosition().y
 				);
 				//is cloud out of bounds
@@ -329,18 +492,42 @@ int main()
 					bCloud3Active = false;
 				}
 			}
-		}
 
-		//Handling player input
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-		{
-			window.close();
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+		window.clear();
+
+		//drawing sprites
+		window.draw(spriteBackground);
+
+		window.draw(spriteCloud1);
+		window.draw(spriteCloud2);
+		window.draw(spriteCloud3);
+
+		//bee passing behind a player and tree;
+		window.draw(spriteBee);
+		window.draw(spriteTree);
+		window.draw(spritePlayer);
+		window.draw(spriteAxe);
+
+		window.draw(spriteLog);
+		window.draw(spriteGravestone);
+
+		//drawing text
+		if (bIsGamePaused)
 		{
-			if (bIsGamePaused)bIsGamePaused = false;
-			playerScore = 0;
-			timeRemaining = 6.f;		}
+			window.draw(messageText);
+		}
+		else
+		{
+			window.draw(timeBar);
+			window.draw(scoreText);
+
+		}
+		for (int i = 0; i < NUM_OF_BRANCHES; i++)
+		{
+			window.draw(branches[i]);
+		}
+		window.display();
 	}
 	return 0;
 }
@@ -353,7 +540,7 @@ void updateBranches(int randomSeed)
 	}
 	srand(time(NULL));
 	
-	int random = (rand() % 5 + randomSeed);
+	int random = ((rand() + randomSeed) % 5 );
 	switch (random)
 	{
 	case 0:
