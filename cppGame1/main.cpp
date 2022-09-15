@@ -6,6 +6,18 @@
 //for debug
 #include <iostream>
 
+const int NUM_OF_BRANCHES = 6;
+
+void updateBranches(int randomSeed);
+
+enum class side { LEFT, RIGHT, NONE};
+
+
+//array of branches
+sf::Sprite branches[ NUM_OF_BRANCHES ];
+side branchPositions[ NUM_OF_BRANCHES ];
+
+
 int main()
 {
 	//window params
@@ -13,6 +25,9 @@ int main()
 	const int HEIGHT	= 1080;
 	//game options
 	bool bIsGamePaused = true;
+
+	//init pseudo-random num;
+	srand(time(NULL));
 
 	//game start options
 	sf::Font font;
@@ -30,10 +45,6 @@ int main()
 	bool bCloud2Active	= false;
 	bool bCloud3Active	= false;
 
-	
-
-	//init pseudo-random num;
-	srand(time(NULL));
 	
 	//initializing time
 	sf::Clock clock;
@@ -94,6 +105,17 @@ int main()
 	messageText.setPosition(WIDTH / 2.f, HEIGHT / 2.f);
 	scoreText.setPosition(50, 50);
 
+	//setting up branches
+	sf::Texture textureBranch;
+	textureBranch.loadFromFile("graphics/branch.png");
+
+	for (int i = 0; i < NUM_OF_BRANCHES; i++)
+	{
+		branches[i].setTexture(textureBranch);
+		branches[i].setPosition(-2000, -2000);
+		branches[i].setOrigin(220, 20);
+	}
+
 	//setting up tree
 	sf::Texture textureTree;
 	textureTree.loadFromFile("graphics/tree.png");
@@ -124,6 +146,13 @@ int main()
 	spriteCloud2.setPosition(0, 250);
 	spriteCloud3.setPosition(0, 500);
 
+
+	updateBranches(1);
+	updateBranches(2);
+	updateBranches(3);
+	updateBranches(4);
+	updateBranches(3);
+
 	/**
 	 * @brief game loop 
 	*/
@@ -145,6 +174,30 @@ int main()
 		ss << "Score : " << playerScore;
 		scoreText.setString(ss.str());
 		
+		//positioning branches
+		for (int i = 0; i < NUM_OF_BRANCHES; i++)
+		{
+			float height = i * 150;
+			if (branchPositions[i] == side::LEFT)
+			{
+				branches[i].setPosition(610, height);
+				//rotate branch 180 degrees
+				branches[i].setRotation(180);
+			}
+			else if (branchPositions[i] == side::RIGHT)
+			{
+				branches[i].setPosition(1330, height);
+				//reset branch rotation
+				branches[i].setRotation(0);
+			}
+			else
+			{
+				//hide branch
+				branches[i].setPosition(3000, height);
+			}
+		}
+
+		//drawing text
 		if (bIsGamePaused)
 		{
 			window.draw(messageText);
@@ -153,6 +206,11 @@ int main()
 		{
 			window.draw(timeBar);
 			window.draw(scoreText);
+
+		}
+		for (int i = 0; i < NUM_OF_BRANCHES; i++)
+		{
+			window.draw(branches[i]);
 		}
 		window.display();
 
@@ -272,6 +330,7 @@ int main()
 				}
 			}
 		}
+
 		//Handling player input
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		{
@@ -284,4 +343,27 @@ int main()
 			timeRemaining = 6.f;		}
 	}
 	return 0;
+}
+
+void updateBranches(int randomSeed)
+{
+	for (int i = NUM_OF_BRANCHES; i > 0; i--)
+	{
+		branchPositions[i] = branchPositions[i - 1];
+	}
+	srand(time(NULL));
+	
+	int random = (rand() % 5 + randomSeed);
+	switch (random)
+	{
+	case 0:
+		branchPositions[0] = side::LEFT;
+		break;
+	case 1:
+		branchPositions[0] = side::RIGHT;
+		break;
+	default:
+		branchPositions[0] = side::NONE;
+		break;
+	}
 }
