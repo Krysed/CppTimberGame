@@ -164,14 +164,14 @@ int main()
 	textureAxe.loadFromFile("graphics/axe.png");
 	sf::Sprite spriteAxe;
 	spriteAxe.setTexture(textureAxe);
-	spriteAxe.setPosition(700, 830);
+	spriteAxe.setPosition(2000, 830);
 
 	//death graphic
 	sf::Texture textureGravestone;
 	textureGravestone.loadFromFile("graphics/rip.png");
 	sf::Sprite spriteGravestone;
 	spriteGravestone.setTexture(textureGravestone);
-	spriteGravestone.setPosition(600, 860);
+	spriteGravestone.setPosition(2000, 860);
 
 	//setting up tree
 	sf::Texture textureTree;
@@ -187,6 +187,26 @@ int main()
 	sf::Sprite spriteLog;
 	spriteLog.setTexture(textureLog);
 	spriteLog.setPosition(810, 720);
+
+	//Background trees
+	sf::Texture textureBackgroundTree;
+	textureBackgroundTree.loadFromFile("graphics/tree2.png");
+	sf::Sprite spriteBackgroundTree;
+	spriteBackgroundTree.setTexture(textureBackgroundTree);
+	spriteBackgroundTree.setPosition(1300, -100);
+	sf::Sprite spriteBackgroundTree2;
+	spriteBackgroundTree2.setTexture(textureBackgroundTree);
+	spriteBackgroundTree2.setPosition(30, 0);
+	spriteBackgroundTree2.setScale(0.9, 1);
+	sf::Sprite spriteBackgroundTree3;
+	spriteBackgroundTree3.setTexture(textureBackgroundTree);
+	spriteBackgroundTree3.setPosition(400, -200);
+	spriteBackgroundTree3.setScale(0.5, 1);
+	sf::Sprite spriteBackgroundTree4;
+	spriteBackgroundTree4.setTexture(textureBackgroundTree);
+	spriteBackgroundTree4.setPosition(1700, -150);
+	spriteBackgroundTree4.setScale(0.7, 1);
+
 
 	//setting up bee
 	sf::Texture textureBee;
@@ -367,7 +387,9 @@ int main()
 				bAcceptPlayerInput = false;
 
 				//show gravestone and hide player sprite out of sight
-				spriteGravestone.setPosition(525, 760);
+				if (playerSide == side::LEFT)spriteGravestone.setPosition(550, 760);
+				else spriteGravestone.setPosition(1120, 760);
+
 				spritePlayer.setPosition(2000, 660);
 				spriteAxe.setPosition(2000, spriteAxe.getPosition().y);
 
@@ -506,6 +528,11 @@ int main()
 		//bee passing behind a player and tree;
 		window.draw(spriteBee);
 		window.draw(spriteTree);
+		window.draw(spriteBackgroundTree);
+		window.draw(spriteBackgroundTree2);
+		window.draw(spriteBackgroundTree3);
+		window.draw(spriteBackgroundTree4);
+
 		window.draw(spritePlayer);
 		window.draw(spriteAxe);
 
@@ -523,6 +550,7 @@ int main()
 			window.draw(scoreText);
 
 		}
+		if(!bIsGamePaused)
 		for (int i = 0; i < NUM_OF_BRANCHES; i++)
 		{
 			window.draw(branches[i]);
