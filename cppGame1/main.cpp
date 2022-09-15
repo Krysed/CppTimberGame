@@ -57,7 +57,7 @@ int main()
 	bool bCloud1Active	= false;
 	bool bCloud2Active	= false;
 	bool bCloud3Active	= false;
-	
+	bool bGameStarted	= false;
 	//player input
 	bool bAcceptPlayerInput = false;
 
@@ -258,6 +258,7 @@ int main()
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
 		{
+			bGameStarted = true;
 			if (bIsGamePaused)
 			{
 				bIsGamePaused = false;
@@ -287,7 +288,7 @@ int main()
 				spriteAxe.setPosition(AXE_POSITION_RIGHT,
 					spriteAxe.getPosition().y);
 				spritePlayer.setPosition(1200, 720);
-				spritePlayer.setRotation(0);
+				spritePlayer.setScale(sf::Vector2f(1, 1));
 
 				//set log flying
 				spriteLog.setPosition(810, 720);
@@ -313,8 +314,8 @@ int main()
 
 				spriteAxe.setPosition(AXE_POSITION_LEFT,
 					spriteAxe.getPosition().y);
-				spritePlayer.setPosition(580, 720);
-
+				spritePlayer.setPosition(800, 720);
+				spritePlayer.setScale(sf::Vector2f(-1, 1));
 				//update branch
 				updateBranches(playerScore);
 
@@ -398,7 +399,10 @@ int main()
 				sf::FloatRect textRect = messageText.getLocalBounds();
 				messageText.setOrigin(textRect.left + textRect.width / 2.f,
 					textRect.top + textRect.height / 2.f);
-
+				if (spritePlayer.getScale() == sf::Vector2f(-1, 1))
+				{
+					spritePlayer.setScale(sf::Vector2f(1, 1));
+				}
 				messageText.setPosition(WIDTH / 2.f, HEIGHT / 2.f);
 				
 				death.setVolume(20);
@@ -550,7 +554,7 @@ int main()
 			window.draw(scoreText);
 
 		}
-		if(!bIsGamePaused)
+		if(bGameStarted)
 		for (int i = 0; i < NUM_OF_BRANCHES; i++)
 		{
 			window.draw(branches[i]);

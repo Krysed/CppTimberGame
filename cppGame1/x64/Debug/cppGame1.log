@@ -3,19 +3,19 @@
 F:\cppGames\cppGame1\cppGame1\main.cpp(40,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 F:\cppGames\cppGame1\cppGame1\main.cpp(200,39): warning C4305: 'argument': truncation from 'double' to 'float'
 F:\cppGames\cppGame1\cppGame1\main.cpp(208,39): warning C4305: 'argument': truncation from 'double' to 'float'
-F:\cppGames\cppGame1\cppGame1\main.cpp(285,40): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(312,40): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(341,17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(425,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(428,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(449,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(450,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(453,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(472,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(473,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(476,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(496,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(497,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(500,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\cppGames\cppGame1\cppGame1\main.cpp(569,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(286,40): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(313,40): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(342,17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(429,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(432,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(453,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(454,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(457,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(476,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(477,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(480,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(500,22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(501,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(504,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\cppGames\cppGame1\cppGame1\main.cpp(573,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   cppGame1.vcxproj -> F:\cppGames\cppGame1\x64\Debug\TimberGame.exe
